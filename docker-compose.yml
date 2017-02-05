@@ -1,0 +1,40 @@
+version: "2"
+
+services:
+  web:
+    build: .
+    image: generic-react
+    container_name: generic-react
+    env_file:
+      - ./mode.env
+    ports:
+      # for production
+      - "80:80"
+      # for development
+      - "8080:8080"
+    volumes:
+      - ./app/:/app/:rw
+    command: >
+      sh -c '
+        if test -d node_modules;
+        then
+          echo node_modules already exist in `pwd`;
+        else
+          cp -a /tmp/node_modules /app/;
+        fi &&
+        if test -d dist;
+        then
+          echo dist already exist in `pwd`;
+        else
+          mkdir dist;
+        fi &&
+        chown www-data:www-data dist &&
+        if [ $${NODE_ENV} = "production" ] || [ $${NODE_ENV} = "PRODUCTION" ];
+        then
+          echo Running in PRODUCTION mode.
+          npm run production
+        else
+          echo Running in DEVELOPMENT mode.
+          npm run dev
+        fi
+      '

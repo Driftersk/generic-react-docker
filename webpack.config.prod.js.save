@@ -1,0 +1,28 @@
+const path = require('path');
+const webpack = require('webpack');
+
+const javascriptEntryPath = path.resolve(__dirname, 'src', 'index.js');
+const htmlEntryPath = path.resolve(__dirname, 'src', 'index.html');
+const buildPath = path.resolve(__dirname, 'public', 'build');
+
+module.exports = {
+  entry: [
+    javascriptEntryPath,
+    htmlEntryPath
+  ],
+   output: {
+    path: buildPath,
+    filename: bundle.js,
+  },
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      exclude: /(node_modules|bower_compoments)/,
+      query:loader: 'babel-loader',
+      
+    }],
+  },
+  plugins: [
+    new webpack.optimize.OccurrenceOrderPlugin()
+  ]
+};
